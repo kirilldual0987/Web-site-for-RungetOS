@@ -647,6 +647,50 @@
             text-align: center;
         }
 
+        /* SPLASH SCREEN */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-text {
+            color: #9b59b6;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.3rem;
+            animation: pulse 2s ease-in-out infinite;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
+        }
+
         /* ANIMATIONS */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -706,6 +750,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <!-- SPLASH SCREEN -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-text">press anywhere to join</div>
+    </div>
+
+    <!-- AUDIO -->
+    <audio id="startSound" preload="auto">
+        <source src="Start.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-container">
@@ -730,12 +784,12 @@
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-robot"></i>
-                    <span>Debian-based Linux с ИИ‑ассистентом Lily&amp;Anemon</span>
+                    <i class="fab fa-linux"></i>
+                    <span>Debian-based Linux с поддержкой Windows и Android</span>
                 </div>
                 <h1>Runget — удобная, красивая и быстрая операционная система</h1>
                 <p class="hero-subtitle">Одна система для дома, офиса, серверов, игр и экспериментов.</p>
-                <p>Runget основан на Debian и Linux‑ядре и сочетает стабильность Debian‑семейства с ИИ‑управлением и расширенной совместимостью с Windows, Linux и Android‑приложениями, включая подсистему Andryemu для Android.</p>
+                <p>Runget основан на Debian и Linux‑ядре и сочетает стабильность Debian‑семейства с расширенной совместимостью с Windows, Linux и Android‑приложениями, включая подсистему Andryemu для Android.</p>
                 <div class="hero-actions">
                     <a href="#download" class="btn btn-download"><i class="fas fa-download"></i> Скачать Runget 1.0</a>
                     <a href="#features" class="btn"><i class="fas fa-list"></i> Возможности</a>
@@ -750,7 +804,7 @@
         <section class="section" id="features">
             <div class="features">
                 <h2 class="section-title">Почему именно Runget?</h2>
-                <p class="section-subtitle">Современный интерфейс в стиле KDE, ИИ‑ассистент, запуск Windows и Android‑приложений, поддержка приложений разных Linux‑дистрибутивов и высокая производительность даже на старом железе.</p>
+                <p class="section-subtitle">Современный интерфейс в стиле KDE, запуск Windows и Android‑приложений, поддержка приложений разных Linux‑дистрибутивов и высокая производительность даже на старом железе.</p>
                 <div class="features-grid">
                     <a class="feature-card" href="https://www.debian.org" target="_blank" rel="noopener">
                         <div class="feature-icon">
@@ -762,18 +816,6 @@
                             <span class="badge">Debian</span>
                             <span class="badge">APT</span>
                             <span class="badge">Stable</span>
-                        </div>
-                    </a>
-
-                    <a class="feature-card" href="https://github.com/Kolyadual/Runget-next_generating_operating_system" target="_blank" rel="noopener">
-                        <div class="feature-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h3>Управление через ИИ</h3>
-                        <p>Встроенный ИИ‑ассистент Lily&amp;Anemon помогает настраивать систему, запускать приложения и оптимизировать рабочие процессы с помощью голосовых и текстовых команд.</p>
-                        <div class="badges-row">
-                            <span class="badge">Автоматизация</span>
-                            <span class="badge">Подсказки по системе</span>
                         </div>
                     </a>
 
@@ -857,7 +899,7 @@
         <section class="section section-alt" id="advantages">
             <div class="os-advantages">
                 <h2 class="section-title">Плюсы Runget и Debian‑based систем</h2>
-                <p class="section-subtitle">Runget наследует сильные стороны Debian‑семейства и добавляет свои фишки: ИИ‑ассистент, акцент на совместимость и восстановление других Debian/Ubuntu‑систем.</p>
+                <p class="section-subtitle">Runget наследует сильные стороны Debian‑семейства и добавляет свои фишки: акцент на совместимость и восстановление других Debian/Ubuntu‑систем.</p>
                 <div class="advantages-grid">
                     <a class="adv-card" href="https://www.debian.org" target="_blank" rel="noopener">
                         <div class="adv-title">
@@ -904,7 +946,7 @@
                             <i class="fas fa-life-ring"></i>
                             <h3>Удобство для новичков</h3>
                         </div>
-                        <p>Debian‑семейство считается удобным для перехода с Windows, а Runget добавляет дружественный интерфейс и ИИ‑подсказки, чтобы пользователю было проще адаптироваться.</p>
+                        <p>Debian‑семейство считается удобным для перехода с Windows, а Runget добавляет дружественный интерфейс и подсказки, чтобы пользователю было проще адаптироваться.</p>
                     </a>
                 </div>
             </div>
@@ -1071,7 +1113,7 @@
                     <img src="Runget.jpg" alt="Runget Logo">
                     <span>Runget OS</span>
                 </div>
-                <p>Универсальная операционная система для всех ваших устройств, сочетающая совместимость Windows, Linux и Android‑приложений с современным интерфейсом и ИИ‑ассистентом.</p>
+                <p>Универсальная операционная система для всех ваших устройств, сочетающая совместимость Windows, Linux и Android‑приложений с современным интерфейсом.</p>
                 <div class="social-links">
                     <a href="https://t.me/runget_rt" target="_blank" rel="noopener"><i class="fab fa-telegram"></i></a>
                     <a href="#" target="_blank" rel="noopener"><i class="fab fa-vk"></i></a>
@@ -1121,5 +1163,37 @@
             <p>&copy; 2025 Kolyadual and Runget team. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        // Splash Screen Logic
+        const splashScreen = document.getElementById('splashScreen');
+        const startSound = document.getElementById('startSound');
+        let splashClicked = false;
+
+        splashScreen.addEventListener('click', function() {
+            if (splashClicked) return;
+            splashClicked = true;
+
+            // Play sound
+            startSound.play().catch(function(error) {
+                console.log('Audio play failed:', error);
+            });
+
+            // Hide splash screen
+            splashScreen.classList.add('hidden');
+
+            // Remove from DOM after animation
+            setTimeout(function() {
+                splashScreen.style.display = 'none';
+            }, 500);
+        });
+
+        // Also allow keyboard press
+        document.addEventListener('keydown', function(e) {
+            if (!splashClicked && !splashScreen.classList.contains('hidden')) {
+                splashScreen.click();
+            }
+        });
+    </script>
 </body>
 </html>

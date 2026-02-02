@@ -105,7 +105,7 @@
             align-items: center;
             text-align: center;
             color: var(--text-primary);
-            padding-top: 80px;
+            padding-top: 130px;
             position: relative;
             overflow: hidden;
         }
@@ -647,6 +647,91 @@
             text-align: center;
         }
 
+        /* MUSIC TOGGLE */
+        .music-toggle-bar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(35, 38, 41, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--bg-hover);
+        }
+
+        .music-toggle-label {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .music-toggle-label i {
+            color: var(--accent-primary);
+            font-size: 1.3rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 70px;
+            height: 36px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--success);
+            transition: var(--transition);
+            border-radius: 36px;
+            box-shadow: 0 2px 10px rgba(46, 204, 113, 0.4);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 28px;
+            width: 28px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--danger);
+            box-shadow: 0 2px 10px rgba(218, 68, 83, 0.4);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(34px);
+        }
+
+        .toggle-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+
         /* SPLASH SCREEN */
         .splash-screen {
             position: fixed;
@@ -756,9 +841,22 @@
     </div>
 
     <!-- AUDIO -->
-    <audio id="startSound" preload="auto">
-        <source src="Start.mp3" type="audio/mpeg">
+    <audio id="backgroundMusic" preload="auto" loop>
+        <source src="Music-default.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- MUSIC TOGGLE BAR -->
+    <div class="music-toggle-bar" id="musicToggleBar" style="display: none;">
+        <span class="music-toggle-label">
+            <i class="fas fa-music"></i>
+            Музыка
+        </span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="musicToggle">
+            <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-status" id="toggleStatus">Играет</span>
+    </div>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -1165,19 +1263,26 @@
     </footer>
 
     <script>
-        // Splash Screen Logic
+        // Elements
         const splashScreen = document.getElementById('splashScreen');
-        const startSound = document.getElementById('startSound');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicToggleBar = document.getElementById('musicToggleBar');
+        const musicToggle = document.getElementById('musicToggle');
+        const toggleStatus = document.getElementById('toggleStatus');
         let splashClicked = false;
 
+        // Splash Screen Logic
         splashScreen.addEventListener('click', function() {
             if (splashClicked) return;
             splashClicked = true;
 
-            // Play sound
-            startSound.play().catch(function(error) {
+            // Play background music (looped)
+            backgroundMusic.play().catch(function(error) {
                 console.log('Audio play failed:', error);
             });
+
+            // Show music toggle bar
+            musicToggleBar.style.display = 'flex';
 
             // Hide splash screen
             splashScreen.classList.add('hidden');
@@ -1192,6 +1297,21 @@
         document.addEventListener('keydown', function(e) {
             if (!splashClicked && !splashScreen.classList.contains('hidden')) {
                 splashScreen.click();
+            }
+        });
+
+        // Music Toggle Logic
+        musicToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Toggle is ON = music is OFF
+                backgroundMusic.pause();
+                toggleStatus.textContent = 'Выключена';
+            } else {
+                // Toggle is OFF = music is ON
+                backgroundMusic.play().catch(function(error) {
+                    console.log('Audio play failed:', error);
+                });
+                toggleStatus.textContent = 'Играет';
             }
         });
     </script>

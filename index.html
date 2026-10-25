@@ -867,6 +867,11 @@
     body.style95 .style95-toggle:hover { background: #2d1b4e; border-color: #6b3fa0; text-decoration: none; }
     body.style95 .style95-toggle[aria-pressed="true"] { border-style: inset; background: #2d1b4e; color: #e0e0e0; }
 
+    .style95-canvas {
+      position: fixed; inset: 0; z-index: 300; width: 100vw; height: 100vh;
+      display: none; pointer-events: none; background: #0a0a0a;
+    }
+
     .s95-taskbar { display: none; }
     body.style95 .s95-taskbar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 120;
@@ -1918,6 +1923,8 @@
     </div>
   </div>
 
+  <canvas class="style95-canvas" id="style95Canvas" aria-hidden="true"></canvas>
+
   <button class="to-top" id="toTop" type="button" aria-label="Наверх">
     <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>
   </button>
@@ -1945,13 +1952,174 @@
         }
       }
 
+      var style95Canvas = document.getElementById("style95Canvas");
+      var style95Transitioning = false;
+
+      function playStyle95Transition() {
+        var ctx = style95Canvas && style95Canvas.getContext && style95Canvas.getContext("2d");
+        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!ctx || reduceMotion) {
+          style95Transitioning = false;
+          return;
+        }
+
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        style95Canvas.width = Math.round(width * dpr);
+        style95Canvas.height = Math.round(height * dpr);
+        style95Canvas.style.display = "block";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        function drawSplash(progress) {
+          ctx.clearRect(0, 0, width, height);
+          var backdrop = ctx.createRadialGradient(
+            width / 2, height / 2, 0,
+            width / 2, height / 2, Math.max(width, height) * 0.62
+          );
+          backdrop.addColorStop(0, "#1a0a2e");
+          backdrop.addColorStop(0.5, "#0d0714");
+          backdrop.addColorStop(1, "#050505");
+          ctx.fillStyle = backdrop;
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.fillStyle = "rgba(139, 92, 246, 0.05)";
+          for (var lineY = 0; lineY < height; lineY += 4) {
+            ctx.fillRect(0, lineY, width, 1);
+          }
+
+          var boxWidth = Math.min(380, width - 40);
+          var boxHeight = 196;
+          var x = Math.round((width - boxWidth) / 2);
+          var y = Math.round((height - boxHeight) / 2);
+
+          ctx.fillStyle = "#121212";
+          ctx.fillRect(x, y, boxWidth, boxHeight);
+          ctx.strokeStyle = "#4a2c7a";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x + 1, y + 1, boxWidth - 2, boxHeight - 2);
+
+          var titleGradient = ctx.createLinearGradient(0, y, 0, y + 24);
+          titleGradient.addColorStop(0, "#4a2c7a");
+          titleGradient.addColorStop(1, "#2d1b4e");
+          ctx.fillStyle = titleGradient;
+          ctx.fillRect(x + 3, y + 3, boxWidth - 6, 22);
+
+          ctx.fillStyle = "#e0e0e0";
+          ctx.font = "bold 10px Tahoma, Arial, sans-serif";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText("Runget OS — style95", x + 10, y + 14);
+
+          for (var i = 0; i < 3; i++) {
+            ctx.fillStyle = "#252525";
+            ctx.fillRect(x + boxWidth - 48 + i * 13, y + 8, 10, 10);
+            ctx.strokeStyle = "#6b3fa0";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x + boxWidth - 47.5 + i * 13, y + 8.5, 9, 9);
+          }
+
+          ctx.fillStyle = "#2d1b4e";
+          ctx.fillRect(x + 18, y + 48, 50, 50);
+          ctx.strokeStyle = "#6b3fa0";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x + 18.5, y + 48.5, 49, 49);
+          ctx.fillStyle = "#a78bfa";
+          ctx.font = "bold 30px Tahoma, Arial, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("R", x + 43, y + 75);
+
+          ctx.textAlign = "left";
+          ctx.fillStyle = "#e0e0e0";
+          ctx.font = "bold 18px Tahoma, Arial, sans-serif";
+          ctx.fillText("Runget OS", x + 82, y + 59);
+          ctx.fillStyle = "#a78bfa";
+          ctx.font = "10px Consolas, monospace";
+          ctx.fillText("style95 interface", x + 82, y + 78);
+          ctx.fillStyle = "#a0a0a0";
+          ctx.font = "9px Tahoma, Arial, sans-serif";
+          ctx.fillText("Запуск оформления…", x + 82, y + 94);
+
+          var barX = x + 18;
+          var barY = y + 126;
+          var barWidth = boxWidth - 36;
+          ctx.fillStyle = "#0a0a0a";
+          ctx.fillRect(barX, barY, barWidth, 12);
+          ctx.strokeStyle = "#4a2c7a";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(barX + 0.5, barY + 0.5, barWidth - 1, 11);
+          ctx.fillStyle = "#8b5cf6";
+          ctx.fillRect(barX + 2, barY + 2, Math.max(0, (barWidth - 4) * progress), 8);
+
+          ctx.fillStyle = "#666666";
+          ctx.font = "8px Tahoma, Arial, sans-serif";
+          ctx.fillText("DCS-inspired interface / 95", x + 18, y + 160);
+        }
+
+        var introStart = performance.now();
+        function introFrame(now) {
+          var progress = Math.min(1, (now - introStart) / 520);
+          drawSplash(progress);
+          if (progress < 1) {
+            window.requestAnimationFrame(introFrame);
+          } else {
+            window.setTimeout(dissolve, 160);
+          }
+        }
+
+        function dissolve() {
+          var cell = 14;
+          var cols = Math.ceil(width / cell);
+          var rows = Math.ceil(height / cell);
+          var cells = [];
+          for (var row = 0; row < rows; row++) {
+            for (var col = 0; col < cols; col++) {
+              cells.push({
+                x: col * cell,
+                y: row * cell,
+                threshold: Math.random() * 0.28 + (row / rows) * 0.72
+              });
+            }
+          }
+          cells.sort(function (a, b) { return a.threshold - b.threshold; });
+
+          var cellIndex = 0;
+          var dissolveStart = performance.now();
+          function dissolveFrame(now) {
+            var progress = Math.min(1, (now - dissolveStart) / 620);
+            while (cellIndex < cells.length && cells[cellIndex].threshold <= progress) {
+              var current = cells[cellIndex++];
+              ctx.clearRect(current.x, current.y, cell, cell);
+            }
+            if (progress < 1) {
+              window.requestAnimationFrame(dissolveFrame);
+            } else {
+              ctx.clearRect(0, 0, width, height);
+              style95Canvas.style.display = "none";
+              style95Transitioning = false;
+            }
+          }
+          window.requestAnimationFrame(dissolveFrame);
+        }
+
+        window.requestAnimationFrame(introFrame);
+      }
+
       if (style95Toggle) {
         style95Toggle.addEventListener("click", function () {
-          setStyle95(!document.body.classList.contains("style95"), true);
+          if (style95Transitioning) return;
+          if (document.body.classList.contains("style95")) {
+            setStyle95(false, true);
+            return;
+          }
+          style95Transitioning = true;
+          setStyle95(true, true);
+          playStyle95Transition();
         });
       }
       if (style95Exit) {
         style95Exit.addEventListener("click", function () {
+          if (style95Transitioning) return;
           setStyle95(false, true);
         });
       }

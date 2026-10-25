@@ -872,6 +872,85 @@
       display: none; pointer-events: none; background: #0a0a0a;
     }
 
+    /* Random ambient glitches */
+    @keyframes s95ElementGlitch {
+      0%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; opacity: 1; }
+      10% { transform: translate(var(--gx, 4px), 2px) skewX(var(--gk, 4deg)); filter: hue-rotate(60deg) saturate(1.8) contrast(1.1); opacity: 1; }
+      22% { transform: translate(var(--gx2, -4px), -2px) skewX(var(--gk2, -4deg)); filter: hue-rotate(-65deg) saturate(1.7) contrast(1.2); opacity: 0.78; }
+      34% { transform: translate(1px, 0) skewX(0deg); filter: none; opacity: 1; }
+      48% { transform: translate(var(--gx, 4px), -1px) skewX(var(--gk2, -4deg)); filter: hue-rotate(130deg) saturate(2.2); opacity: 1; }
+      62% { transform: translate(0, 1px) skewX(0deg); filter: none; opacity: 0.86; }
+    }
+    body.style95 .s95-element-glitch {
+      animation: s95ElementGlitch 0.42s steps(2, end) both;
+      will-change: transform, filter;
+    }
+    body.style95 h1.s95-element-glitch,
+    body.style95 h2.s95-element-glitch,
+    body.style95 h3.s95-element-glitch {
+      text-shadow: 1px 0 rgba(255, 0, 80, 0.35), -1px 0 rgba(0, 220, 255, 0.3);
+    }
+    @keyframes s95ScreenJitter {
+      0%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; }
+      14% { transform: translateX(-4px) skewX(1deg); filter: hue-rotate(40deg) saturate(1.5); }
+      29% { transform: translateX(5px) skewX(-1.5deg); filter: hue-rotate(-55deg) contrast(1.2); }
+      46% { transform: translateX(-2px) skewX(0.7deg); filter: none; }
+      65% { transform: translateX(3px) skewX(-0.5deg); filter: hue-rotate(120deg) saturate(2); }
+      82% { transform: translateX(-1px); filter: none; }
+    }
+    body.style95.s95-screen-glitch .site-header,
+    body.style95.s95-screen-glitch main,
+    body.style95.s95-screen-glitch .site-footer,
+    body.style95.s95-screen-glitch .s95-taskbar {
+      animation: s95ScreenJitter 0.34s steps(2, end) 1 both;
+    }
+    .s95-glitch-overlay {
+      position: fixed; inset: 0; z-index: 290; display: none; overflow: hidden;
+      pointer-events: none;
+    }
+    .s95-glitch-overlay.is-active { display: block; animation: s95GlitchFade 0.5s steps(2, end) both; }
+    .s95-glitch-overlay::before {
+      content: ""; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 0, 80, 0.07) 0px, rgba(255, 0, 80, 0.07) 1px,
+        transparent 1px, transparent 4px,
+        rgba(0, 220, 255, 0.05) 4px, rgba(0, 220, 255, 0.05) 5px,
+        transparent 5px, transparent 8px
+      );
+      animation: s95ScanShift 0.14s steps(2, end) infinite;
+    }
+    .s95-glitch-overlay .s95-tear {
+      position: absolute; left: -4%; width: 108%;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.26) 22%, rgba(255, 0, 120, 0.22) 52%, rgba(0, 220, 255, 0.18) 72%, transparent);
+      mix-blend-mode: screen; opacity: 0.85;
+      animation: s95TearShift 0.2s steps(2, end) infinite;
+    }
+    .s95-tear:nth-child(1) { top: var(--t1, 22%); height: var(--h1, 3%); animation-delay: 0s; }
+    .s95-tear:nth-child(2) { top: var(--t2, 54%); height: var(--h2, 1.5%); animation-delay: 0.05s; }
+    .s95-tear:nth-child(3) { top: var(--t3, 78%); height: var(--h3, 5%); animation-delay: 0.1s; }
+    .s95-glitch-code {
+      position: absolute; top: 74px; right: 28px;
+      color: #a78bfa; font: 9px Consolas, "Courier New", monospace;
+      letter-spacing: 0.12em; text-shadow: 1px 0 #ff0050, -1px 0 #00d7ff;
+    }
+    @keyframes s95GlitchFade {
+      0% { opacity: 0; }
+      12% { opacity: 1; }
+      58% { opacity: 0.82; }
+      100% { opacity: 0; }
+    }
+    @keyframes s95ScanShift {
+      from { transform: translateY(0); }
+      to { transform: translateY(6px); }
+    }
+    @keyframes s95TearShift {
+      0% { transform: translateX(-3%); opacity: 0; }
+      16% { opacity: 0.85; }
+      45% { transform: translateX(4%); }
+      100% { transform: translateX(-2%); opacity: 0; }
+    }
+
     .s95-taskbar { display: none; }
     body.style95 .s95-taskbar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 120;
@@ -1925,6 +2004,13 @@
 
   <canvas class="style95-canvas" id="style95Canvas" aria-hidden="true"></canvas>
 
+  <div class="s95-glitch-overlay" id="s95GlitchOverlay" aria-hidden="true">
+    <span class="s95-tear"></span>
+    <span class="s95-tear"></span>
+    <span class="s95-tear"></span>
+    <span class="s95-glitch-code" id="s95GlitchCode">ERR_0x00</span>
+  </div>
+
   <button class="to-top" id="toTop" type="button" aria-label="Наверх">
     <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>
   </button>
@@ -1936,6 +2022,119 @@
       var style95Toggle = document.getElementById("style95Toggle");
       var style95Exit = document.getElementById("style95Exit");
       var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+      var style95GlitchOverlay = document.getElementById("s95GlitchOverlay");
+      var style95GlitchCode = document.getElementById("s95GlitchCode");
+      var glitchTimer = null;
+      var motionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+
+      function prefersReducedMotion() {
+        return !!(motionQuery && motionQuery.matches);
+      }
+
+      function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function glitchNode(node, delay) {
+        if (!node) return;
+        var x = randomBetween(3, 12);
+        var skew = randomBetween(2, 8);
+        window.setTimeout(function () {
+          node.style.setProperty("--gx", x.toFixed(1) + "px");
+          node.style.setProperty("--gx2", (-x).toFixed(1) + "px");
+          node.style.setProperty("--gk", skew.toFixed(1) + "deg");
+          node.style.setProperty("--gk2", (-skew).toFixed(1) + "deg");
+          node.classList.remove("s95-element-glitch");
+          void node.offsetWidth;
+          node.classList.add("s95-element-glitch");
+          window.setTimeout(function () {
+            node.classList.remove("s95-element-glitch");
+          }, 480);
+        }, delay || 0);
+      }
+
+      function triggerElementGlitch() {
+        var candidates = document.querySelectorAll(
+          ".hero h1, .hero-stat, .section-heading h2, .feature-card, .version-panel, .req-card, .download-card, .device-card, .news-item, .advantage"
+        );
+        var visible = [];
+        for (var i = 0; i < candidates.length; i++) {
+          var rect = candidates[i].getBoundingClientRect();
+          if (rect.width > 0 && rect.bottom > 40 && rect.top < window.innerHeight - 40) {
+            visible.push(candidates[i]);
+          }
+        }
+        if (!visible.length) return;
+
+        var first = visible[Math.floor(Math.random() * visible.length)];
+        glitchNode(first, 0);
+
+        if (Math.random() < 0.34 && visible.length > 1) {
+          var second = visible[Math.floor(Math.random() * visible.length)];
+          if (second !== first) glitchNode(second, 120);
+        }
+      }
+
+      function triggerScreenGlitch() {
+        if (!style95GlitchOverlay) return;
+        style95GlitchOverlay.style.setProperty("--t1", randomBetween(12, 34).toFixed(1) + "%");
+        style95GlitchOverlay.style.setProperty("--t2", randomBetween(42, 64).toFixed(1) + "%");
+        style95GlitchOverlay.style.setProperty("--t3", randomBetween(70, 88).toFixed(1) + "%");
+        style95GlitchOverlay.style.setProperty("--h1", randomBetween(1.5, 4).toFixed(1) + "%");
+        style95GlitchOverlay.style.setProperty("--h2", randomBetween(1, 2.8).toFixed(1) + "%");
+        style95GlitchOverlay.style.setProperty("--h3", randomBetween(2, 5.5).toFixed(1) + "%");
+        if (style95GlitchCode) {
+          var codes = ["ERR_0x5F", "SIGNAL_LOST", "CRT_SYNC", "MEM_FAULT", "0x000000FF", "VERTICAL_HOLD"];
+          style95GlitchCode.textContent = codes[Math.floor(Math.random() * codes.length)];
+        }
+
+        style95GlitchOverlay.style.display = "block";
+        style95GlitchOverlay.classList.add("is-active");
+        document.body.classList.add("s95-screen-glitch");
+
+        window.setTimeout(function () {
+          document.body.classList.remove("s95-screen-glitch");
+        }, 380);
+        window.setTimeout(function () {
+          style95GlitchOverlay.classList.remove("is-active");
+          style95GlitchOverlay.style.display = "none";
+        }, 540);
+      }
+
+      function scheduleStyle95Glitch(delay) {
+        window.clearTimeout(glitchTimer);
+        if (!document.body.classList.contains("style95") || prefersReducedMotion()) return;
+        glitchTimer = window.setTimeout(function () {
+          if (!document.body.classList.contains("style95")) return;
+          if (document.hidden) {
+            scheduleStyle95Glitch(randomBetween(4000, 8000));
+            return;
+          }
+          if (Math.random() < 0.24) {
+            triggerScreenGlitch();
+          } else {
+            triggerElementGlitch();
+          }
+          scheduleStyle95Glitch(randomBetween(6500, 14000));
+        }, delay);
+      }
+
+      function startStyle95Glitches() {
+        if (prefersReducedMotion()) return;
+        scheduleStyle95Glitch(randomBetween(4000, 7500));
+      }
+
+      function stopStyle95Glitches() {
+        window.clearTimeout(glitchTimer);
+        glitchTimer = null;
+        document.body.classList.remove("s95-screen-glitch");
+        var active = document.querySelectorAll(".s95-element-glitch");
+        for (var i = 0; i < active.length; i++) active[i].classList.remove("s95-element-glitch");
+        if (style95GlitchOverlay) {
+          style95GlitchOverlay.classList.remove("is-active");
+          style95GlitchOverlay.style.display = "none";
+        }
+      }
 
       function setStyle95(enabled, persist) {
         document.documentElement.classList.toggle("style95", enabled);
@@ -1945,6 +2144,7 @@
           style95Toggle.title = enabled ? "Включено оформление style95" : "Включить оформление style95";
         }
         if (themeColorMeta) themeColorMeta.setAttribute("content", enabled ? "#0a0a0a" : "#f6f7f3");
+        if (enabled) startStyle95Glitches(); else stopStyle95Glitches();
         if (persist) {
           try {
             localStorage.setItem("runget-style95", enabled ? "on" : "off");

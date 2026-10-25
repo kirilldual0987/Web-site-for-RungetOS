@@ -1022,10 +1022,14 @@
 <body id="top">
   <script>
     try {
-      if (localStorage.getItem("runget-style95") === "on") {
+      var initialStyleParams = new URLSearchParams(window.location.search);
+      if (initialStyleParams.get("style95") === "1") {
         document.documentElement.classList.add("style95");
         document.body.classList.add("style95");
       }
+    } catch (error) {}
+    try {
+      localStorage.removeItem("runget-style95");
     } catch (error) {}
   </script>
   <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -2136,7 +2140,7 @@
         }
       }
 
-      function setStyle95(enabled, persist) {
+      function setStyle95(enabled, updateUrl) {
         document.documentElement.classList.toggle("style95", enabled);
         document.body.classList.toggle("style95", enabled);
         if (style95Toggle) {
@@ -2145,10 +2149,11 @@
         }
         if (themeColorMeta) themeColorMeta.setAttribute("content", enabled ? "#0a0a0a" : "#f6f7f3");
         if (enabled) startStyle95Glitches(); else stopStyle95Glitches();
-        if (persist) {
-          try {
-            localStorage.setItem("runget-style95", enabled ? "on" : "off");
-          } catch (error) {}
+        if (updateUrl && window.history && history.replaceState) {
+          var url = new URL(window.location.href);
+          if (enabled) url.searchParams.set("style95", "1");
+          else url.searchParams.delete("style95");
+          history.replaceState(null, "", url.pathname + url.search + url.hash);
         }
       }
 
@@ -2377,6 +2382,13 @@
       var tabs = Array.prototype.slice.call(document.querySelectorAll(".version-tab"));
       var panels = Array.prototype.slice.call(document.querySelectorAll(".version-panel"));
 
+      function updateVersionUrl(id) {
+        if (!window.history || !history.replaceState) return;
+        var url = new URL(window.location.href);
+        url.hash = id;
+        history.replaceState(null, "", url.pathname + url.search + url.hash);
+      }
+
       function activateVersion(id, focusTab) {
         var target = document.getElementById(id);
         if (!target || !target.classList.contains("version-panel")) return false;
@@ -2399,7 +2411,9 @@
 
       tabs.forEach(function (tab, index) {
         tab.addEventListener("click", function () {
-          activateVersion(tab.getAttribute("data-version"));
+          var id = tab.getAttribute("data-version");
+          activateVersion(id);
+          updateVersionUrl(id);
         });
 
         tab.addEventListener("keydown", function (event) {
@@ -2410,7 +2424,9 @@
           if (event.key === "End") nextIndex = tabs.length - 1;
           if (nextIndex === null) return;
           event.preventDefault();
-          activateVersion(tabs[nextIndex].getAttribute("data-version"), true);
+          var nextId = tabs[nextIndex].getAttribute("data-version");
+          activateVersion(nextId, true);
+          updateVersionUrl(nextId);
         });
       });
 
@@ -2423,7 +2439,7 @@
         event.preventDefault();
         var section = document.getElementById("versions");
         if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
-        if (history.replaceState) history.replaceState(null, "", "#" + id);
+        if (history.replaceState) history.replaceState(null, "", window.location.pathname + window.location.search + "#" + id);
       });
 
       if (window.location.hash) {

@@ -429,34 +429,18 @@
     .frozen-label .icon { width: 14px; height: 14px; }
 
     /* Gallery */
-    .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .gallery-item {
-      display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 12px;
-      background: var(--surface); cursor: zoom-in;
+    .gallery-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 300px; padding: 48px 24px; text-align: center;
+      border: 1px dashed var(--line-strong); border-radius: 18px; background: var(--surface);
     }
-    .gallery-item img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.35s ease; }
-    .gallery-item:hover img { transform: scale(1.025); }
-    .gallery-caption { margin-top: 18px; color: var(--muted); font-size: 11.5px; }
-
-    dialog.lightbox {
-      width: min(1040px, calc(100% - 32px)); max-height: calc(100vh - 32px);
-      margin: auto; padding: 0; border: 0; border-radius: 14px; background: var(--dark); color: #fff;
-      overflow: hidden;
+    .gallery-empty-icon {
+      width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 18px; border-radius: 12px; background: var(--green-soft); color: var(--green);
     }
-    dialog.lightbox::backdrop { background: rgba(8, 13, 10, 0.72); }
-    .lightbox-inner { position: relative; display: flex; flex-direction: column; }
-    .lightbox-image { width: 100%; max-height: calc(100vh - 160px); object-fit: contain; background: #0a0f0c; }
-    .lightbox-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 16px; }
-    .lightbox-caption { margin: 0; color: #c5d1c9; font-size: 12px; }
-    .lightbox-controls { display: flex; align-items: center; gap: 6px; }
-    .lightbox-button {
-      width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 8px; background: transparent; color: #dfe7e1;
-      cursor: pointer;
-    }
-    .lightbox-button:hover { border-color: rgba(255, 255, 255, 0.5); }
-    .lightbox-button .icon { width: 16px; height: 16px; }
-    .lightbox-close { position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 18, 0.82); }
+    .gallery-empty-icon .icon { width: 21px; height: 21px; }
+    .gallery-empty h3 { margin: 0 0 6px; font-size: 20px; font-weight: 600; }
+    .gallery-empty p { margin: 0; color: var(--muted); font-size: 14px; }
 
     /* Footer */
     .site-footer { padding: 64px 0 22px; border-top: 1px solid var(--line); background: var(--bg-soft); }
@@ -534,7 +518,6 @@
       .arm-features { grid-template-columns: 1fr 1fr; }
       .advantage-grid { grid-template-columns: 1fr; gap: 0; }
       .devices-grid { grid-template-columns: 1fr 1fr; }
-      .gallery-grid { grid-template-columns: 1fr 1fr; }
       .news-item { grid-template-columns: 92px minmax(0, 1fr) 16px; gap: 14px; }
       .download-frozen-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -552,7 +535,6 @@
       .req-grid { grid-template-columns: 1fr; }
       .req-card:last-child { grid-column: auto; }
       .devices-grid { grid-template-columns: 1fr; }
-      .gallery-grid { grid-template-columns: 1fr; }
       .news-item { grid-template-columns: 1fr 16px; gap: 2px 12px; }
       .news-date { grid-column: 1 / -1; }
       .news-arrow { grid-row: 2 / span 2; align-self: center; }
@@ -773,7 +755,7 @@
             <div class="tags"><span class="tag">Steam</span><span class="tag">Proton</span><span class="tag">Vulkan</span></div>
           </a>
 
-          <a class="feature-card" href="#gallery">
+          <a class="feature-card" href="#versions">
             <div class="feature-top">
               <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-palette"/></svg></span>
               <svg class="feature-arrow icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
@@ -1447,37 +1429,15 @@
         <div class="section-heading">
           <div>
             <span class="section-kicker">08 · Галерея</span>
-            <h2>Посмотрите на Runget</h2>
+            <h2>Галерея Runget</h2>
           </div>
-          <p>Рабочий стол, системные приложения и обои Runget 1.0 Anythink Anywhere.</p>
+          <p>Раздел временно недоступен.</p>
         </div>
-        <div class="gallery-grid">
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/7296ed95-d2d0-4693-8b65-a0193eaeb880" target="_blank" rel="noopener" data-lightbox data-title="Рабочий стол">
-            <img src="https://github.com/user-attachments/assets/7296ed95-d2d0-4693-8b65-a0193eaeb880" alt="Рабочий стол Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/8daac9e6-442a-45ea-a9c8-a8da8293cdbf" target="_blank" rel="noopener" data-lightbox data-title="Интерфейс системы">
-            <img src="https://github.com/user-attachments/assets/8daac9e6-442a-45ea-a9c8-a8da8293cdbf" alt="Интерфейс Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/cd00d85f-887d-4c61-bf02-9cbaf823eeac" target="_blank" rel="noopener" data-lightbox data-title="Файловый менеджер">
-            <img src="https://github.com/user-attachments/assets/cd00d85f-887d-4c61-bf02-9cbaf823eeac" alt="Файловый менеджер Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/fc973a90-011e-40a7-a548-d1cc392e798e" target="_blank" rel="noopener" data-lightbox data-title="Настройки системы">
-            <img src="https://github.com/user-attachments/assets/fc973a90-011e-40a7-a548-d1cc392e798e" alt="Настройки Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/0b5a2fa2-f7ac-40c8-bc46-1481568e4842" target="_blank" rel="noopener" data-lightbox data-title="Терминал">
-            <img src="https://github.com/user-attachments/assets/0b5a2fa2-f7ac-40c8-bc46-1481568e4842" alt="Терминал Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/b4306b28-e013-4e0e-9e30-1292b8f6f876" target="_blank" rel="noopener" data-lightbox data-title="Панель задач">
-            <img src="https://github.com/user-attachments/assets/b4306b28-e013-4e0e-9e30-1292b8f6f876" alt="Панель задач Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/ca25da02-9359-47bf-893d-fb24757d66d8" target="_blank" rel="noopener" data-lightbox data-title="Тестирование">
-            <img src="https://github.com/user-attachments/assets/ca25da02-9359-47bf-893d-fb24757d66d8" alt="Тестирование Runget" loading="lazy">
-          </a>
-          <a class="gallery-item" href="https://github.com/user-attachments/assets/e22b9726-2ed9-4828-9b2e-2d35161a1590" target="_blank" rel="noopener" data-lightbox data-title="Обои Runget">
-            <img src="https://github.com/user-attachments/assets/e22b9726-2ed9-4828-9b2e-2d35161a1590" alt="Обои Runget" loading="lazy">
-          </a>
+        <div class="gallery-empty">
+          <span class="gallery-empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg></span>
+          <h3>Отсутствует</h3>
+          <p>Галерея будет возвращена позднее.</p>
         </div>
-        <p class="gallery-caption">Нажмите на изображение, чтобы открыть его крупнее.</p>
       </div>
     </section>
   </main>
@@ -1548,26 +1508,6 @@
   <button class="to-top" id="toTop" type="button" aria-label="Наверх">
     <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>
   </button>
-
-  <dialog class="lightbox" id="lightbox">
-    <div class="lightbox-inner">
-      <button class="lightbox-button lightbox-close" id="lightboxClose" type="button" aria-label="Закрыть">
-        <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
-      </button>
-      <img class="lightbox-image" id="lightboxImage" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="">
-      <div class="lightbox-bar">
-        <p class="lightbox-caption" id="lightboxCaption"></p>
-        <div class="lightbox-controls">
-          <button class="lightbox-button" id="lightboxPrev" type="button" aria-label="Предыдущее изображение">
-            <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
-          </button>
-          <button class="lightbox-button" id="lightboxNext" type="button" aria-label="Следующее изображение">
-            <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </dialog>
 
   <script>
     (function () {
@@ -1677,51 +1617,6 @@
         var id = window.location.hash.slice(1);
         if (document.getElementById(id)) activateVersion(id);
       });
-
-      var lightbox = document.getElementById("lightbox");
-      var lightboxImage = document.getElementById("lightboxImage");
-      var lightboxCaption = document.getElementById("lightboxCaption");
-      var gallery = Array.prototype.slice.call(document.querySelectorAll("[data-lightbox]"));
-      var currentImage = 0;
-
-      function showImage(index) {
-        if (!gallery.length) return;
-        currentImage = (index + gallery.length) % gallery.length;
-        var trigger = gallery[currentImage];
-        var image = trigger.querySelector("img");
-        lightboxImage.src = trigger.getAttribute("href");
-        lightboxImage.alt = image ? image.alt : "";
-        lightboxCaption.textContent = trigger.getAttribute("data-title") + " · " + (currentImage + 1) + " / " + gallery.length;
-      }
-
-      if (lightbox && typeof lightbox.showModal === "function") {
-        gallery.forEach(function (trigger, index) {
-          trigger.addEventListener("click", function (event) {
-            event.preventDefault();
-            showImage(index);
-            lightbox.showModal();
-          });
-        });
-
-        document.getElementById("lightboxClose").addEventListener("click", function () {
-          lightbox.close();
-        });
-        document.getElementById("lightboxPrev").addEventListener("click", function () {
-          showImage(currentImage - 1);
-        });
-        document.getElementById("lightboxNext").addEventListener("click", function () {
-          showImage(currentImage + 1);
-        });
-
-        lightbox.addEventListener("click", function (event) {
-          if (event.target === lightbox) lightbox.close();
-        });
-
-        lightbox.addEventListener("keydown", function (event) {
-          if (event.key === "ArrowLeft") showImage(currentImage - 1);
-          if (event.key === "ArrowRight") showImage(currentImage + 1);
-        });
-      }
 
       var toTop = document.getElementById("toTop");
       function syncToTop() {
